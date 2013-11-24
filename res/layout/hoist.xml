@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hoist"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/hoist_size"
+    android:padding="@dimen/hoist_padding"
+    android:background="@color/hoist_background"
+    android:textColor="@color/hoist_text"
+    android:textSize="@dimen/hoist_font_size" >
+
+</TextView>

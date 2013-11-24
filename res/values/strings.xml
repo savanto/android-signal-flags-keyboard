@@ -1,0 +1,50 @@
+<resources>
+
+    <string name="ime_name">Signal Flags Keyboard</string>
+	<string name="settings_name">Signal Flags Keyboard Settings</string>
+
+	<string name="hoist_key">HOIST</string>
+
+	<!-- Preferences/Settings -->
+
+	<string name="pref_category_general">General</string>
+<!-- 
+	<string name="pref_key_numbers">pref_key_numbers</string>
+	<string name="pref_title_numbers">Numbers</string>
+	<string name="pref_summary_numbers">Display numbers row in main keyboard.</string>
+	<string name="pref_default_numbers">false</string>
+-->
+	<string name="pref_key_hints">pref_key_hints</string>
+	<string name="pref_title_hints">Hints</string>
+	<string name="pref_summary_hints">Display key hints over flags.</string>
+	<string name="pref_default_hints">false</string>
+
+	<string name="pref_key_numbers_system">pref_key_numbers_system</string>
+	<string name="pref_title_numbers_system">Number Flags System</string>
+	<string name="pref_dialog_title_numbers_system">Number Flags System</string>
+	<string name="pref_summary_numbers_system"></string>
+	<string name="pref_default_numbers_system">false</string>
+
+
+    <string-array name="keyboard_mode_numbers_entries">
+        <item>No Flags</item>
+        <item>ICS Pennants</item>
+        <item>NATO Flags</item>
+        <item>Popham Flags</item>
+    </string-array>
+    <string-array name="keyboard_mode_numbers_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+	<!-- IME Subtypes -->
+
+	<string name="subtype_mode_keyboard">keyboard</string>
+	<string name="subtype_locale_en_US">en_US</string>
+
+	<string name="subtype_qwerty">QWERTY</string>
+	<string name="subtype_qwerty_with_numbers">QWERTY with numbers row</string>
+	
+</resources>

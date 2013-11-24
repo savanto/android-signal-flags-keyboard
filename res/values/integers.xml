@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="keyboard_mode_numbers_none">0</integer>
+    <integer name="keyboard_mode_numbers_arabic">1</integer>
+    <integer name="keyboard_mode_numbers_ics">2</integer>
+    <integer name="keyboard_mode_numbers_nato">3</integer>
+    <integer name="keyboard_mode_numbers_popham">4</integer>
+
+    <integer name="keyboard_mode_letters_normal">0</integer>
+    <integer name="keyboard_mode_letters_hints">1</integer>
+</resources>

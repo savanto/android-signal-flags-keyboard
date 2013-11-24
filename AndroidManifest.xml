@@ -1,0 +1,40 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.savanto.signalflagskb"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/ime_name"
+        android:icon="@drawable/ahoy" >
+
+        <service
+            android:name="com.savanto.signalflagskb.SignalFlagsInputMethodService"
+            android:permission="android.permission.BIND_INPUT_METHOD"
+            android:icon="@drawable/ahoy">
+
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data 
+                android:name="android.view.im" 
+                android:resource="@xml/method" />
+        </service>
+
+        <activity
+            android:name="com.savanto.signalflagskb.SignalFlagsSettings"
+            android:label="@string/settings_name"
+            android:icon="@drawable/ahoy">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

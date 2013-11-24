@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="key_border">1dp</dimen>
+	<dimen name="key_radius">2dp</dimen>
+
+    <dimen name="key_height">50dp</dimen>
+    <dimen name="hoist_size">48dp</dimen>
+    <dimen name="hoist_padding">6dp</dimen>
+    <dimen name="hoist_font_size">24sp</dimen>
+</resources>
