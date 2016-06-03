@@ -7,15 +7,12 @@ import android.inputmethodservice.Keyboard;
  * @author savanto
  *
  */
-public class SignalFlagsKeyboard extends Keyboard
-{
-
+public class SignalFlagsKeyboard extends Keyboard {
     /**
      * @param context
      * @param xmlLayoutResId
      */
-    public SignalFlagsKeyboard(Context context, int xmlLayoutResId)
-    {
+    public SignalFlagsKeyboard(Context context, int xmlLayoutResId) {
         super(context, xmlLayoutResId);
     }
 
@@ -24,12 +21,11 @@ public class SignalFlagsKeyboard extends Keyboard
      * @param xmlLayoutResId
      * @param modeId
      */
-    public SignalFlagsKeyboard(Context context, int xmlLayoutResId, int modeId)
-    {
+    public SignalFlagsKeyboard(Context context, int xmlLayoutResId, int modeId) {
         super(context, xmlLayoutResId, modeId);
     }
 
-    
+
     /**
      * @param context
      * @param layoutTemplateResId
@@ -37,11 +33,8 @@ public class SignalFlagsKeyboard extends Keyboard
      * @param columns
      * @param horizontalPadding
      */
-    public SignalFlagsKeyboard(Context context, int layoutTemplateResId,
-            CharSequence characters, int columns, int horizontalPadding)
-    {
-        super(context, layoutTemplateResId, characters, columns,
-                horizontalPadding);
+    public SignalFlagsKeyboard(Context context, int layoutTemplateResId, CharSequence characters,
+                               int columns, int horizontalPadding) {
+        super(context, layoutTemplateResId, characters, columns, horizontalPadding);
     }
-
 }

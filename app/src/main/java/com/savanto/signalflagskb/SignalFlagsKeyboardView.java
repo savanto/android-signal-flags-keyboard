@@ -8,8 +8,7 @@ import android.util.AttributeSet;
  * @author savanto
  *
  */
-public class SignalFlagsKeyboardView extends KeyboardView
-{
+public class SignalFlagsKeyboardView extends KeyboardView {
     public static final int KEYCODE_HOIST = 32;
     public static final int KEYCODE_RETURN = 10;
     public static final int KEYCODE_OPTIONS = -1000;
@@ -22,9 +21,8 @@ public class SignalFlagsKeyboardView extends KeyboardView
      * @param context
      * @param attrs
      */
-    public SignalFlagsKeyboardView(Context context, AttributeSet attrs)
-    {
-        super(context, attrs);        
+    public SignalFlagsKeyboardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     /**
@@ -32,10 +30,7 @@ public class SignalFlagsKeyboardView extends KeyboardView
      * @param attrs
      * @param defStyle
      */
-    public SignalFlagsKeyboardView(Context context, AttributeSet attrs,
-            int defStyle)
-    {
+    public SignalFlagsKeyboardView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
 }

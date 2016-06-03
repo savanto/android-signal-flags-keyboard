@@ -8,12 +8,10 @@ import android.preference.PreferenceManager;
  * @author savanto
  * Displays the keyboard settings inside the input method setting.
  */
-public class SignalFlagsSettings extends PreferenceActivity
-{
+public class SignalFlagsSettings extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set the title of the activity
