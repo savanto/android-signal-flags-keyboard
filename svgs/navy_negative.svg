@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="3072" height="1536">
+	<pattern id="tile" x="0" y="0" width="1536" height="1536"
+		patternUnits="userSpaceOnUse">
+		<rect x="0" y="0" width="1536" height="1536"
+			style="fill:#ffff00;" />
+		<path d="M 0,0 H 768 V 1536 H 1536 V 768 H 0 V 0 Z"
+			style="fill:#0000ff;" />
+	</pattern>
+
+	<polygon points="0,0 3072,384 3072,1152 0,1536"
+		style="fill:url(#tile);" />
+</svg>
