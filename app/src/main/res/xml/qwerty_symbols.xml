@@ -8,7 +8,7 @@
     android:horizontalGap="0px"
     android:verticalGap="0px" >
 
-	<Row android:keyboardMode="@integer/keyboard_mode_numbers_arabic" >
+    <Row android:keyboardMode="@integer/keyboard_mode_numbers_arabic" >
         <Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left" />
         <Key android:codes="50" android:keyLabel="2" />
         <Key android:codes="51" android:keyLabel="3" />
@@ -21,7 +21,7 @@
         <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="right" />
     </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_numbers_ics" >
+    <Row android:keyboardMode="@integer/keyboard_mode_numbers_ics" >
         <Key android:codes="49" android:keyIcon="@drawable/ics_one" android:keyEdgeFlags="left" />
         <Key android:codes="50" android:keyIcon="@drawable/ics_two" />
         <Key android:codes="51" android:keyIcon="@drawable/ics_three" />
@@ -34,7 +34,7 @@
         <Key android:codes="48" android:keyIcon="@drawable/ics_zero" android:keyEdgeFlags="right" />
     </Row>
     
-	<Row android:keyboardMode="@integer/keyboard_mode_numbers_nato" >
+    <Row android:keyboardMode="@integer/keyboard_mode_numbers_nato" >
         <Key android:codes="49" android:keyIcon="@drawable/nato_one" android:keyEdgeFlags="left" />
         <Key android:codes="50" android:keyIcon="@drawable/nato_two" />
         <Key android:codes="51" android:keyIcon="@drawable/nato_three" />
@@ -47,7 +47,7 @@
         <Key android:codes="48" android:keyIcon="@drawable/nato_zero" android:keyEdgeFlags="right" />
     </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_numbers_popham" >
+    <Row android:keyboardMode="@integer/keyboard_mode_numbers_popham" >
         <Key android:codes="49" android:keyIcon="@drawable/popham_one" android:keyEdgeFlags="left" />
         <Key android:codes="50" android:keyIcon="@drawable/popham_two" />
         <Key android:codes="51" android:keyIcon="@drawable/popham_three" />
@@ -60,7 +60,7 @@
         <Key android:codes="48" android:keyIcon="@drawable/popham_zero" android:keyEdgeFlags="right" />
     </Row>
 
-	<Row>
+    <Row>
         <Key android:codes="64" android:keyLabel="\@" android:keyEdgeFlags="left" />
         <Key android:codes="35" android:keyLabel="\#"/>
         <Key android:codes="36" android:keyLabel="$"/>

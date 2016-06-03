@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="3072" height="1536">
-	<pattern id="tile" x="0" y="0" width="3072" height="1536"
-		patternUnits="userSpaceOnUse">
-		<rect x="0" y="0" width="3072" height="1536"
-			style="fill:#ffffff;" />
-		<rect x="614" y="0" width="430" height="1536"
-			style="fill:#ff0000;" />
-		<rect x="0" y="553" width="3072" height="430"
-			style="fill:#ff0000;" />
-	</pattern>
-	<polygon points="0,0 3072,384 3072,1152 0,1536"
-		style="fill:url(#tile);" />
+    <pattern id="tile" x="0" y="0" width="3072" height="1536"
+        patternUnits="userSpaceOnUse">
+        <rect x="0" y="0" width="3072" height="1536"
+            style="fill:#ffffff;" />
+        <rect x="614" y="0" width="430" height="1536"
+            style="fill:#ff0000;" />
+        <rect x="0" y="553" width="3072" height="430"
+            style="fill:#ff0000;" />
+    </pattern>
+    <polygon points="0,0 3072,384 3072,1152 0,1536"
+        style="fill:url(#tile);" />
 </svg>

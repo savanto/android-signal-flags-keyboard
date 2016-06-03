@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="3072" height="3072">
-	<rect x="0" y="0" width="3072" height="3072"
-		style="fill:#ffffff;" />
-	<text x="1536" y="2304" style="fill:#606060;
-		font-size:2048;stoke:none; text-anchor:middle">8</text>
+    <rect x="0" y="0" width="3072" height="3072"
+        style="fill:#ffffff;" />
+    <text x="1536" y="2304" style="fill:#606060;
+        font-size:2048;stoke:none; text-anchor:middle">8</text>
 </svg>

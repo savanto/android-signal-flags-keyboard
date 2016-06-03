@@ -8,7 +8,7 @@
     android:keyWidth="10%p"
     android:keyHeight="@dimen/key_height" >
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
         <Key android:codes="113" android:keyIcon="@drawable/ics_quebec" android:keyEdgeFlags="left" />
         <Key android:codes="119" android:keyIcon="@drawable/ics_whiskey" />
         <Key android:codes="101" android:keyIcon="@drawable/ics_echo" />
@@ -19,9 +19,9 @@
         <Key android:codes="105" android:keyIcon="@drawable/ics_india" />
         <Key android:codes="111" android:keyIcon="@drawable/ics_oscar" />
         <Key android:codes="112" android:keyIcon="@drawable/ics_papa" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
         <Key android:codes="113" android:keyIcon="@drawable/ics_quebec_hint" android:keyEdgeFlags="left" />
         <Key android:codes="119" android:keyIcon="@drawable/ics_whiskey_hint" />
         <Key android:codes="101" android:keyIcon="@drawable/ics_echo_hint" />
@@ -32,9 +32,9 @@
         <Key android:codes="105" android:keyIcon="@drawable/ics_india_hint" />
         <Key android:codes="111" android:keyIcon="@drawable/ics_oscar_hint" />
         <Key android:codes="112" android:keyIcon="@drawable/ics_papa_hint" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
         <Key android:codes="97" android:keyIcon="@drawable/ics_alpha" android:keyEdgeFlags="left" android:horizontalGap="5%p" />
         <Key android:codes="115" android:keyIcon="@drawable/ics_sierra" />
         <Key android:codes="100" android:keyIcon="@drawable/ics_delta" />
@@ -44,9 +44,9 @@
         <Key android:codes="106" android:keyIcon="@drawable/ics_juliet" />
         <Key android:codes="107" android:keyIcon="@drawable/ics_kilo" />
         <Key android:codes="108" android:keyIcon="@drawable/ics_lima" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
         <Key android:codes="97" android:keyIcon="@drawable/ics_alpha_hint" android:keyEdgeFlags="left" android:horizontalGap="5%p" />
         <Key android:codes="115" android:keyIcon="@drawable/ics_sierra_hint" />
         <Key android:codes="100" android:keyIcon="@drawable/ics_delta_hint" />
@@ -56,9 +56,9 @@
         <Key android:codes="106" android:keyIcon="@drawable/ics_juliet_hint" />
         <Key android:codes="107" android:keyIcon="@drawable/ics_kilo_hint" />
         <Key android:codes="108" android:keyIcon="@drawable/ics_lima_hint" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_normal">
         <Key android:codes="-1" android:keyIcon="@drawable/sym_shift" android:keyWidth="15%p" 
             android:keyEdgeFlags="left" android:isModifier="true" android:isSticky="true" />
 
@@ -72,9 +72,9 @@
 
         <Key android:codes="-5" android:keyIcon="@drawable/sym_delete" android:keyWidth="15%p"
             android:keyEdgeFlags="right" android:isRepeatable="true" />
-	</Row>
+    </Row>
 
-	<Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
+    <Row android:keyboardMode="@integer/keyboard_mode_letters_hints">
         <Key android:codes="-1" android:keyIcon="@drawable/sym_shift" android:keyWidth="15%p" 
             android:keyEdgeFlags="left" android:isModifier="true" android:isSticky="true" />
 
@@ -88,9 +88,9 @@
 
         <Key android:codes="-5" android:keyIcon="@drawable/sym_delete" android:keyWidth="15%p"
             android:keyEdgeFlags="right" android:isRepeatable="true" />
-	</Row>
+    </Row>
 
-	<Row android:rowEdgeFlags="bottom">
+    <Row android:rowEdgeFlags="bottom">
         <Key android:codes="-2" android:keyLabel="\?123" android:keyWidth="20%p" android:keyEdgeFlags="left" />
 
         <Key android:codes="-1000" android:keyIcon="@drawable/sym_settings" android:keyWidth="10%p" />

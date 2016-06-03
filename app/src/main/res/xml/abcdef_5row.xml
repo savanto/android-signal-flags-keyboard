@@ -17,7 +17,7 @@
         <Key android:codes="102" android:keyIcon="@drawable/ics_foxtrot" />
         <Key android:codes="103" android:keyIcon="@drawable/ics_golf" />
         <Key android:codes="104" android:keyIcon="@drawable/ics_hotel" />
-	</Row>
+    </Row>
 
     <Row>
         <Key android:codes="105" android:keyIcon="@drawable/ics_india" android:keyEdgeFlags="left" />
@@ -28,7 +28,7 @@
         <Key android:codes="110" android:keyIcon="@drawable/ics_november" />
         <Key android:codes="111" android:keyIcon="@drawable/ics_oscar" />
         <Key android:codes="112" android:keyIcon="@drawable/ics_papa" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
     <Row>
         <Key android:codes="113" android:keyIcon="@drawable/ics_quebec" android:keyEdgeFlags="left" />
@@ -39,7 +39,7 @@
         <Key android:codes="118" android:keyIcon="@drawable/ics_victor" />
         <Key android:codes="119" android:keyIcon="@drawable/ics_whiskey" />
         <Key android:codes="120" android:keyIcon="@drawable/ics_xray" android:keyEdgeFlags="right" />
-	</Row>
+    </Row>
 
     <Row>
         <Key android:codes="121" android:keyIcon="@drawable/ics_yankee" android:keyEdgeFlags="left" />
@@ -52,7 +52,7 @@
 
         <Key android:codes="-5" android:keyIcon="@drawable/sym_delete" android:keyWidth="25%p" android:keyEdgeFlags="right"
             android:isRepeatable="true" />
-	</Row>
+    </Row>
 
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="-1000" android:keyIcon="@drawable/sym_settings" android:keyWidth="25%p" android:keyEdgeFlags="left" />

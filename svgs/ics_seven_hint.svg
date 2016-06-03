@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="3072" height="1536">
-	<defs>
-		<linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-			<stop offset="0%" style="stop-color:#ffff00;" />
-			<stop offset="50%" style="stop-color:#ffff00;" />
-			<stop offset="50%" style="stop-color:#ff0000;" />
-			<stop offset="100%" style="stop-color:#ff0000;" />
-		</linearGradient>
-	</defs>
-	<polygon points="0,0 3072,384 3072,1152 0,1536"
-		style="fill:url(#grad);" />
-	<text x="1536" y="1536"
-		style="fill:#606060;font-size:2048;stoke:none;
-		text-anchor:middle">7</text>
+    <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffff00;" />
+            <stop offset="50%" style="stop-color:#ffff00;" />
+            <stop offset="50%" style="stop-color:#ff0000;" />
+            <stop offset="100%" style="stop-color:#ff0000;" />
+        </linearGradient>
+    </defs>
+    <polygon points="0,0 3072,384 3072,1152 0,1536"
+        style="fill:url(#grad);" />
+    <text x="1536" y="1536"
+        style="fill:#606060;font-size:2048;stoke:none;
+        text-anchor:middle">7</text>
 </svg>

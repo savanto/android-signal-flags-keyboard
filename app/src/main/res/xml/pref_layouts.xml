@@ -3,23 +3,23 @@
     <PreferenceCategory
         android:title="@string/pref_category_general" >
 <!-- 
-	    <CheckBoxPreference
-	        android:key="@string/pref_key_numbers"
-	        android:title="@string/pref_title_numbers"
-	        android:summary="@string/pref_summary_numbers"
-	        android:persistent="true"
-	        android:defaultValue="@string/pref_default_numbers"
-	        />
+        <CheckBoxPreference
+            android:key="@string/pref_key_numbers"
+            android:title="@string/pref_title_numbers"
+            android:summary="@string/pref_summary_numbers"
+            android:persistent="true"
+            android:defaultValue="@string/pref_default_numbers"
+            />
 -->
-	    <CheckBoxPreference
-	        android:key="@string/pref_key_hints"
-	        android:title="@string/pref_title_hints"
-	        android:summary="@string/pref_summary_hints"
-	        android:persistent="true"
-	        android:defaultValue="@string/pref_default_hints"
-	        />
+        <CheckBoxPreference
+            android:key="@string/pref_key_hints"
+            android:title="@string/pref_title_hints"
+            android:summary="@string/pref_summary_hints"
+            android:persistent="true"
+            android:defaultValue="@string/pref_default_hints"
+            />
 
-	    <ListPreference
+        <ListPreference
             android:key="@string/pref_key_numbers_system"
             android:title="@string/pref_title_numbers_system"
             android:dialogTitle="@string/pref_dialog_title_numbers_system"
@@ -29,6 +29,6 @@
             android:defaultValue="2"
             />
 
-	</PreferenceCategory>
+    </PreferenceCategory>
 
 </PreferenceScreen>

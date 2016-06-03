@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="3072" height="1536">
-	<polygon points="0,0 3072,768 0,1536"
-		style="fill:#0000ff;" />
-	<polygon points="0,256 2048,768 0,1280"
-		style="fill:#ffff00;" />
+    <polygon points="0,0 3072,768 0,1536"
+        style="fill:#0000ff;" />
+    <polygon points="0,256 2048,768 0,1280"
+        style="fill:#ffff00;" />
 </svg>
