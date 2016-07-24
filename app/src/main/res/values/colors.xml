@@ -2,6 +2,8 @@
 <resources>
     <color name="hoist_background">#aaffffff</color>
     <color name="hoist_text">#000000</color>
+    <color name="hint_text">#ffaaaaaa</color>
+    <color name="shift_text">#ff4abce8</color>
 
     <color name="key_normal">#5a6367</color>
     <color name="key_pressed">#6b7477</color>

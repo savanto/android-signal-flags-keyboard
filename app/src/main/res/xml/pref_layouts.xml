@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory
-        android:title="@string/pref_category_general" >
-<!-- 
+    <PreferenceCategory android:title="@string/pref_category_general">
         <CheckBoxPreference
-            android:key="@string/pref_key_numbers"
-            android:title="@string/pref_title_numbers"
-            android:summary="@string/pref_summary_numbers"
-            android:persistent="true"
-            android:defaultValue="@string/pref_default_numbers"
-            />
--->
-        <CheckBoxPreference
-            android:key="@string/pref_key_hints"
+            android:key="com.savanto.signalflagskb.ShowHints"
             android:title="@string/pref_title_hints"
             android:summary="@string/pref_summary_hints"
             android:persistent="true"
-            android:defaultValue="@string/pref_default_hints"
+            android:defaultValue="false"
             />
-
+        <CheckBoxPreference
+            android:key="com.savanto.signalflagskb.DoHoist"
+            android:title="@string/pref_title_hoist"
+            android:summary="@string/pref_summary_hoist"
+            android:persistent="true"
+            android:defaultValue="true"
+            />
         <ListPreference
-            android:key="@string/pref_key_numbers_system"
+            android:key="com.savanto.signalflagskb.NumberSystem"
             android:title="@string/pref_title_numbers_system"
-            android:dialogTitle="@string/pref_dialog_title_numbers_system"
+            android:summary="%s"
+            android:dialogTitle="@string/pref_title_numbers_system"
             android:entries="@array/keyboard_mode_numbers_entries"
             android:entryValues="@array/keyboard_mode_numbers_values"
             android:persistent="true"
-            android:defaultValue="2"
+            android:defaultValue="ics"
             />
-
     </PreferenceCategory>
-
 </PreferenceScreen>

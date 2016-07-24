@@ -1,248 +1,182 @@
 package com.savanto.signalflagskb;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
-import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntegerRes;
+import android.support.annotation.XmlRes;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputMethodSubtype;
 import android.widget.TextView;
 
-/**
- * @author savanto
- *
- */
-public class SignalFlagsInputMethodService extends InputMethodService
+
+public final class SignalFlagsInputMethodService extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
-    private SignalFlagsKeyboardView mInputView;
-    private TextView mHoistView;
+    private static final int KEYCODE_HOIST = 32;
+    private static final int KEYCODE_RETURN = 10;
+    private static final int KEYCODE_OPTIONS = -1000;
+    private static final int KEYCODE_REPEAT_1 = -1001;
+    private static final int KEYCODE_REPEAT_2 = -1002;
+    private static final int KEYCODE_REPEAT_3 = -1003;
+    private static final int KEYCODE_REPEAT_4 = -1004;
 
-    private SharedPreferences mPreferences;
+    private enum Type {
+        DEFAULT(R.xml.qwerty),
+        SYMBOLS(R.xml.symbols),
+        ;
 
-    private SignalFlagsKeyboard mDefKeyboard;
-    private SignalFlagsKeyboard mSymKeyboard;
-    private SignalFlagsKeyboard mAltKeyboard;
-    private SignalFlagsKeyboard mCurKeyboard;
+        private final @XmlRes int xml;
 
-    private int mLastDisplayWidth;
-    private boolean mCapsLock;
-    private boolean mShift;
-
-    private StringBuilder mHoist = new StringBuilder();
-    private long mHoistCount;
-
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onCreate()
-     **
-     * Main initialization of the input method component.
-     */
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        this.mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onInitializeInterface()
-     **
-     * This is the point where you can do all of your UI initialization. It
-     * is called after creation and any configuration change.
-     */
-    @Override
-    public void onInitializeInterface() {
-        if (this.mDefKeyboard != null) {
-            // Configuration changes can happen after the keyboard gets recreated,
-            // so we need to be able to re-build the keyboards if the available
-            // space has changed.
-            int displayWidth = this.getMaxWidth();
-            if (displayWidth == this.mLastDisplayWidth) {
-                return;
-            }
-            this.mLastDisplayWidth = displayWidth;
+        Type(@XmlRes int xml) {
+            this.xml = xml;
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onCreateInputView()
-     **
-     * Called by the framework when your view for creating input needs to
-     * be generated. This will be called the first time your input method
-     * is displayed, and every time it needs to be re-created such as due to
-     * a configuration change.
-     */
+    private enum Number {
+        ICS("ics", R.integer.keyboard_mode_numbers_ics),
+        NATO("nato", R.integer.keyboard_mode_numbers_nato),
+        POPHAM("popham", R.integer.keyboard_mode_numbers_popham),
+        ;
+
+        private final @IntegerRes int mode;
+        private final String slug;
+
+        Number(String slug, @IntegerRes int mode) {
+            this.mode = mode;
+            this.slug = slug;
+        }
+
+        public static Number find(String slug) {
+            for (final Number number : Number.values()) {
+                if (number.slug.equals(slug)) {
+                    return number;
+                }
+            }
+            return ICS;
+        }
+    }
+
+    private SignalFlagsKeyboardView mInputView;
+    private TextView mHoistView;
+
+    private Type type = Type.DEFAULT;
+    private Number number = Number.ICS;
+    private boolean doHoist;
+
+    private final StringBuilder mHoist = new StringBuilder();
+    private boolean previousHoist;
+
+    @Override
+    public void onStartInput(EditorInfo attribute, boolean restarting) {
+        super.onStartInput(attribute, restarting);
+
+        // We are now going to initialize our state based on the type of
+        // text being edited.
+        switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
+        case InputType.TYPE_CLASS_NUMBER: // FALL-THROUGH
+        case InputType.TYPE_CLASS_DATETIME:
+            // Numbers and dates default to the symbols keyboard,
+            // with no extra features.
+            this.type = Type.SYMBOLS;
+            break;
+        case InputType.TYPE_CLASS_PHONE:
+            // TODO numberpad
+            this.type = Type.SYMBOLS;
+            break;
+        case InputType.TYPE_CLASS_TEXT:
+            // This is general text editing. We will default to the
+            // normal default keyboard.
+            this.type = Type.DEFAULT;
+            break;
+        default:
+            // For all unknown input types, use default keyboard
+            // with no special features.
+            this.type = Type.DEFAULT;
+            break;
+        }
+    }
+
+    @SuppressLint("InflateParams")
     @Override
     public View onCreateInputView() {
-        this.mInputView = (SignalFlagsKeyboardView) this.getLayoutInflater()
-                .inflate(R.layout.input, null);
+        this.mHoist.setLength(0);
+        this.updateHoist();
+        this.previousHoist = false;
+
+        // Determine number mode and hints.
+        this.mInputView = (SignalFlagsKeyboardView) this.getLayoutInflater().inflate(
+                R.layout.input,
+                null
+        );
         this.mInputView.setOnKeyboardActionListener(this);
-        this.mInputView.setKeyboard(this.mDefKeyboard);
+
         return this.mInputView;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onCreateCandidatesView()
-     **
-     * Called by the framework when your view for showing candidates needs to
-     * be generated, like {@link #onCreateInputView}.
-     */
+    @Override
+    public void onStartInputView(EditorInfo info, boolean restarting) {
+        super.onStartInputView(info, restarting);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        this.doHoist = prefs.getBoolean("com.savanto.signalflagskb.DoHoist", true);
+        this.number = Number.find(prefs.getString("com.savanto.signalflagskb.NumberSystem", "ics"));
+        final boolean showHints = prefs.getBoolean("com.savanto.signalflagskb.ShowHints", false);
+        this.mInputView.setKeyboard(new Keyboard(this, this.type.xml, this.number.mode));
+        this.mInputView.showHints(showHints);
+        this.mInputView.setShifted(true);
+    }
+
+    @SuppressLint("InflateParams")
     @Override
     public View onCreateCandidatesView() {
         this.mHoistView = (TextView) this.getLayoutInflater().inflate(R.layout.hoist, null);
         return this.mHoistView;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onStartInput(android.view.inputmethod.EditorInfo, boolean)
-     **
-     * This is the main point where we do our initialization of the input method
-     * to begin operating on an application. At this point we have been
-     * bound to the client, and are now receiving all of the detailed information
-     * about the target of our edits.
-     */
-    @Override
-    public void onStartInput(EditorInfo attribute, boolean restarting) {
-        super.onStartInput(attribute, restarting);
-
-        // Setup the right keyboards to show depending on preference settings
-        this.setupKeyboards();
-
-        // Reset our state. We want to do this even if restarting, because
-        // the underlying state of the text editor could have changed in any way.
-        this.mHoist.setLength(0);
-        this.updateHoist();
-        this.mHoistCount = 0;
-        this.mShift = true;
-        this.mCapsLock = false;
-
-        // We are now going to initialize our state based on the type of
-        // text being edited.
-        switch (attribute.inputType & InputType.TYPE_MASK_CLASS) {
-            case InputType.TYPE_CLASS_NUMBER:
-            case InputType.TYPE_CLASS_DATETIME:
-                // Numbers and dates default to the symbols keyboard,
-                // with no extra features.
-                this.mCurKeyboard = this.mSymKeyboard;
-                break;
-
-            case InputType.TYPE_CLASS_PHONE:
-                // TODO numberpad
-                this.mCurKeyboard = this.mSymKeyboard;
-                break;
-
-            case InputType.TYPE_CLASS_TEXT:
-                // This is general text editing. We will default to the
-                // normal default keyboard.
-                this.mCurKeyboard = this.mDefKeyboard;
-
-                // Look at current state of the editor
-                // to decide whether the keyboard should start out shifted.
-                this.updateShiftKeyState(attribute);
-                break;
-
-            default:
-                // For all unknown input types, use default keyboard
-                // with no special features.
-                this.mCurKeyboard = this.mDefKeyboard;
-                break;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onFinishInput()
-     **
-     * This is called when the user is done editing a field. We can use
-     * this to reset our state.
-     */
     @Override
     public void onFinishInput() {
-        super.onFinishInput();
-
         // Clear current composing text and candidates.
         this.mHoist.setLength(0);
         this.updateHoist();
-        this.mHoistCount = 0;
-
-        // We only hide the candidates window when finishing input on
-        // a particular editor, to avoid popping the underlying application
-        // up and down if the user is entering text into the bottom of
-        // its window.
+        this.previousHoist = false;
         this.setCandidatesViewShown(false);
-
-        this.mCurKeyboard = this.mDefKeyboard;
-        if (this.mInputView != null) {
-            this.mInputView.closing();
-        }
+        super.onFinishInput();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onStartInputView(android.view.inputmethod.EditorInfo, boolean)
-     **
-     *
-     */
-    @Override
-    public void onStartInputView(EditorInfo attribute, boolean restarting) {
-        super.onStartInputView(attribute, restarting);
-        // Apply the selected keyboard to the input view
-        this.mInputView.setKeyboard(this.mCurKeyboard);
-        this.mInputView.closing();
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Override
-    public void onCurrentInputMethodSubtypeChanged(InputMethodSubtype subtype) {
-        // NOP
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onUpdateSelection(int, int, int, int, int, int)
-     **
-     * Deal with the editor reporting movement of its cursor.
-     */
     @Override
     public void onUpdateSelection(int oldSelStart, int oldSelEnd,
                                   int newSelStart, int newSelEnd,
                                   int candidatesStart, int candidatesEnd) {
-        super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
-                candidatesStart, candidatesEnd);
+        super.onUpdateSelection(
+                oldSelStart,
+                oldSelEnd,
+                newSelStart,
+                newSelEnd,
+                candidatesStart,
+                candidatesEnd
+        );
 
         // If the current selection in the text view changes, we should
         // clear whatever candidate text we have.
         if (this.mHoist.length() > 0 && (newSelStart != candidatesEnd || newSelEnd != candidatesEnd)) {
             this.mHoist.setLength(0);
             this.updateHoist();
-            this.mHoistCount = 0;
+            this.previousHoist = false;
 
-            InputConnection ic = this.getCurrentInputConnection();
+            final InputConnection ic = this.getCurrentInputConnection();
             if (ic != null) {
                 ic.finishComposingText();
             }
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.InputMethodService#onKeyDown(int, android.view.KeyEvent)
-     **
-     * Use this to monitor key events being delivered to the application.
-     * We get first crack at them, and can either consume them or let them
-     * continue to the app.
-     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
@@ -278,69 +212,36 @@ public class SignalFlagsInputMethodService extends InputMethodService
     private void doHoist() {
         // If composing a hoist, send it to the editor
         if (this.mHoist.length() > 0) {
-            InputConnection ic = this.getCurrentInputConnection();
+            final InputConnection ic = this.getCurrentInputConnection();
             // Determine spacing:
             // Automatically insert space between previous and current hoists.
             // Check for previous hoists
-            if (this.mHoistCount > 0) {
+            if (this.previousHoist) {
                 // send text with space
-                ic.commitText(
-                        Character.toString((char) SignalFlagsKeyboardView.KEYCODE_HOIST) + this.mHoist,
-                        1
-                );
+                ic.commitText(Character.toString((char) KEYCODE_HOIST) + this.mHoist, 1);
             } else {
                 // send text without space
                 ic.commitText(this.mHoist, 1);
             }
 
-            this.mHoistCount++;
+            this.previousHoist = true;
             this.mHoist.setLength(0);
             this.updateHoist();
         }
     }
 
     /**
-     * Helper to update the shift state of the keyboard based
-     * on the initial editor state.
-     */
-    private void updateShiftKeyState(EditorInfo attr) {
-        if (attr != null
-                && this.mInputView != null
-                && this.mDefKeyboard == this.mInputView.getKeyboard()) {
-            int caps = 0;
-            EditorInfo ei = this.getCurrentInputEditorInfo();
-            if (ei != null && ei.inputType != InputType.TYPE_NULL) {
-                caps = this.getCurrentInputConnection().getCursorCapsMode(attr.inputType);
-            }
-            this.mInputView.setShifted(this.mCapsLock || caps != 0);
-        }
-    }
-
-    /**
-     * Helper to determine whether the character is whitespace
-     */
-    private boolean isWhitespace(int code) {
-        return Character.isWhitespace(code);
-    }
-
-    /**
      * Helper to send a key down / key up pair to the current editor.
      */
     private void keyDownUp(int keyEventCode) {
-        this.getCurrentInputConnection()
-            .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyEventCode));
-        this.getCurrentInputConnection()
-            .sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyEventCode));
+        final InputConnection ic = this.getCurrentInputConnection();
+        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keyEventCode));
+        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keyEventCode));
     }
 
     /*
      * Implementation of OnKeyboardActionListener to take action when the user
      * interacts with the keyboard.
-     */
-
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.KeyboardView.OnKeyboardActionListener#onKey(int, int[])
      */
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -349,12 +250,12 @@ public class SignalFlagsInputMethodService extends InputMethodService
                 this.handleBackspace();
                 break;
             case Keyboard.KEYCODE_SHIFT:
-                this.handleShift();
+                this.mInputView.toggleShift(primaryCode);
                 break;
             case Keyboard.KEYCODE_CANCEL:
-                this.handleClose();
+                this.requestHideSelf(0);
                 break;
-            case SignalFlagsKeyboardView.KEYCODE_OPTIONS:
+            case KEYCODE_OPTIONS:
                 this.getApplication().startActivity(
                         new Intent(this.getBaseContext(), SignalFlagsSettings.class)
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -362,35 +263,31 @@ public class SignalFlagsInputMethodService extends InputMethodService
                 break;
 
             // Handle repeater flags
-            case SignalFlagsKeyboardView.KEYCODE_REPEAT_1:
+            case KEYCODE_REPEAT_1:
                 this.handleRepeat(0);
                 break;
-            case SignalFlagsKeyboardView.KEYCODE_REPEAT_2:
+            case KEYCODE_REPEAT_2:
                 this.handleRepeat(1);
                 break;
-            case SignalFlagsKeyboardView.KEYCODE_REPEAT_3:
+            case KEYCODE_REPEAT_3:
                 this.handleRepeat(2);
                 break;
-            case SignalFlagsKeyboardView.KEYCODE_REPEAT_4:
+            case KEYCODE_REPEAT_4:
                 this.handleRepeat(3);
                 break;
 
             case Keyboard.KEYCODE_MODE_CHANGE:
                 if (this.mInputView != null) {
-                    Keyboard current = this.mInputView.getKeyboard();
-                    if (current != this.mDefKeyboard) {
-                        current = this.mDefKeyboard;
+                    if (this.type != Type.DEFAULT) {
+                        this.type = Type.DEFAULT;
                     } else {
-                        current = this.mSymKeyboard;
-                        this.mShift = false;
-                        this.mCapsLock = false;
+                        this.type = Type.SYMBOLS;
                     }
-
-                    this.mInputView.setKeyboard(current);
+                    this.mInputView.setKeyboard(new Keyboard(this, this.type.xml, this.number.mode));
                 }
                 break;
 
-            case SignalFlagsKeyboardView.KEYCODE_HOIST:
+            case KEYCODE_HOIST:
                 // Space, or "hoist" key.
                 // If we are composing text, do the hoist, which will figure out spacing.
                 // Otherwise, simply send a space to the editor.
@@ -402,11 +299,11 @@ public class SignalFlagsInputMethodService extends InputMethodService
                             1
                     );
                     // Reset hoist count for this line
-                    this.mHoistCount = 0;
+                    this.previousHoist = false;
                 }
                 break;
 
-            case SignalFlagsKeyboardView.KEYCODE_RETURN:
+            case KEYCODE_RETURN:
                 // Return/enter key.
                 // If we are composing text, do the hoist which will figure out spacing.
                 // Then send the key event to the application.
@@ -415,22 +312,32 @@ public class SignalFlagsInputMethodService extends InputMethodService
                 }
                 this.keyDownUp(KeyEvent.KEYCODE_ENTER);
                 // Reset hoist count for this line
-                this.mHoistCount = 0;
+                this.previousHoist = false;
                 break;
 
             default:
-                this.handleCharacter(primaryCode, keyCodes);
+                if (this.mInputView.isShifted()) {
+                    primaryCode = Character.toUpperCase(primaryCode);
+                }
+                if (this.type == Type.DEFAULT) {
+                    this.mInputView.toggleShift(primaryCode);
+                }
+                if (this.doHoist && ! Character.isWhitespace(primaryCode)) {
+                    this.mHoist.append((char) primaryCode);
+                    this.updateHoist();
+                } else {
+                    this.getCurrentInputConnection().commitText(
+                            Character.toString((char) primaryCode),
+                            1
+                    );
+                }
                 break;
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.inputmethodservice.KeyboardView.OnKeyboardActionListener#onText(java.lang.CharSequence)
-     */
     @Override
     public void onText(CharSequence text) {
-        InputConnection ic = this.getCurrentInputConnection();
+        final InputConnection ic = this.getCurrentInputConnection();
         if (ic != null) {
             ic.beginBatchEdit();
             if (this.mHoist.length() > 0) {
@@ -466,61 +373,6 @@ public class SignalFlagsInputMethodService extends InputMethodService
         }
     }
 
-    /**
-     * Shift has been pressed. Handle shifting/unshifting/capslock
-     */
-    private void handleShift() {
-        if (this.mInputView == null) {
-            return;
-        }
-
-        Keyboard current = this.mInputView.getKeyboard();
-
-        // Default keyboard -- normal shift/capslock operation
-        if (current == this.mDefKeyboard) {
-            if (this.mCapsLock) {
-                this.mCapsLock = false;
-                this.mShift = false;
-            } else {
-                // If already shifted, turn capslock on, if unshifted, ensure it's off.
-                this.mCapsLock = this.mShift;
-                // Toggle shift
-                this.mShift = ! this.mShift;
-            }
-        } else {
-            // Shift key cycles symbol keyboards
-            if (this.mShift) {
-                this.mInputView.setKeyboard(this.mAltKeyboard);
-            } else {
-                this.mInputView.setKeyboard(this.mSymKeyboard);
-            }
-
-            // No capslock here
-            this.mCapsLock = false;
-            // Toggle shift
-            this.mShift = ! this.mShift;
-        }
-    }
-
-    private void handleCharacter(int primaryCode, int[] keyCodes) {
-        if (this.isInputViewShown()) {
-            if (this.mShift || this.mCapsLock) {
-                primaryCode = Character.toUpperCase(primaryCode);
-            }
-            // Reset shift
-            if (this.mInputView.getKeyboard() == this.mDefKeyboard) {
-                this.mShift = false;
-            }
-        }
-        if (! this.isWhitespace(primaryCode)) {
-            this.mHoist.append((char) primaryCode);
-            this.updateShiftKeyState(this.getCurrentInputEditorInfo());
-            this.updateHoist();
-        } else {
-            this.getCurrentInputConnection().commitText(Character.toString((char) primaryCode), 1);
-        }
-    }
-
     private void handleRepeat(int offset) {
         if (this.mHoist.length() > offset) {
             this.mHoist.append(this.mHoist.charAt(offset));
@@ -528,15 +380,9 @@ public class SignalFlagsInputMethodService extends InputMethodService
         this.updateHoist();
     }
 
-    private void handleClose() {
-        this.doHoist();
-        this.requestHideSelf(0);
-        this.mInputView.closing();
-    }
-
     @Override
     public void swipeDown() {
-        this.handleClose();
+        this.requestHideSelf(0);
     }
 
     @Override
@@ -562,42 +408,5 @@ public class SignalFlagsInputMethodService extends InputMethodService
     @Override
     public void onRelease(int primaryCode) {
         // NOP
-    }
-
-    /**
-     * Helper to setup the right keyboards to use based on preferences.
-     */
-    private void setupKeyboards() {
-        // Determine number mode
-        int numberMode;
-        switch (Integer.valueOf(this.mPreferences.getString(this.getString(R.string.pref_key_numbers_system), "2"))) {
-            case 1:
-                numberMode = R.integer.keyboard_mode_numbers_arabic;
-                break;
-            case 2:
-                numberMode = R.integer.keyboard_mode_numbers_ics;
-                break;
-            case 3:
-                numberMode = R.integer.keyboard_mode_numbers_nato;
-                break;
-            case 4:
-                numberMode = R.integer.keyboard_mode_numbers_popham;
-                break;
-            default:
-                numberMode = R.integer.keyboard_mode_numbers_ics;
-                break;
-        }
-
-        // Define main keyboard
-        // Determine hints mode
-        if (this.mPreferences.getBoolean(this.getString(R.string.pref_key_hints), false)) {
-            this.mDefKeyboard = new SignalFlagsKeyboard(this, R.xml.qwerty, R.integer.keyboard_mode_letters_hints);
-        } else {
-            this.mDefKeyboard = new SignalFlagsKeyboard(this, R.xml.qwerty, R.integer.keyboard_mode_letters_normal);
-        }
-
-        // Define symbols and alternative symbols keyboards.
-        this.mSymKeyboard = new SignalFlagsKeyboard(this, R.xml.qwerty_symbols, numberMode);
-        this.mAltKeyboard = new SignalFlagsKeyboard(this, R.xml.qwerty_alt_symbols);
     }
 }
